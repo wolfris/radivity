@@ -19,7 +19,7 @@ get_thresholds_da() {
     esac
     echo -e -n "  before pressing Enter.\n\n  "
     read thresholds
-    if [ -z $threshold ];then
+    if [ -z $thresholds ];then
 	case $1 in
 	    df)
 		lower=1.0
@@ -89,15 +89,10 @@ illum_options(){
     
     
     get_thresholds_da illum
+ 
+    echo -e "\tThe analysis is run with the following thresholds: "$lower" and "$upper"." >> $logfile
     
-    if [[ -z "$threshold1" || -z "$threshold2" ]]; then
-	threshold1=300
-	threshold2=1000
-    fi
-    
-    echo -e "\tThe analysis is run with the following thresholds: "$threshold1" and "$threshold2"." >> $logfile
-    
-    incr=$(echo $threshold2 $threshold1 | awk '{print $1-$2}')
+    incr=$(echo $upper $lower | awk '{print $1-$2}')
     
     
     option_file=$tmpd/custom.opt
