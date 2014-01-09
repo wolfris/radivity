@@ -1,0 +1,61 @@
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" content="text/html; charset=Windows-1252">
+</head>
+<body>
+<pre>
+<table width=100% bgcolor=#CFCFE5><tr> <td> <font face=arial size=+3>
+Build Log
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+<h3>------- Build started: Project: genrepresentativesuns, Configuration: Release|Win32 -------
+</h3>
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Command Lines
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>This edition of Visual C++ does not support the optimizing compiler.
+Creating temporary file "e:\Projects\Viol\UDI_test\genrepresentativesuns\Release\RSP000005.rsp" with contents
+[
+/D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /EHsc /ML /GS /Fo"Release/" /Fd"Release/vc70.pdb" /W3 /c /Wp64 /Zi /TP
+.\gensuns.cpp
+.\CBdspSKYSun.cpp
+.\CBdspGENPoint.cpp
+]
+Creating command line "cl.exe @e:\Projects\Viol\UDI_test\genrepresentativesuns\Release\RSP000005.rsp /nologo"
+Creating temporary file "e:\Projects\Viol\UDI_test\genrepresentativesuns\Release\RSP000006.rsp" with contents
+[
+/OUT:"Release/genrepresentativesuns.exe" /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:"Release/genrepresentativesuns.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /MACHINE:X86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+.\Release\CBdspGENPoint.obj
+.\Release\CBdspSKYSun.obj
+.\Release\gensuns.obj
+]
+Creating command line "link.exe @e:\Projects\Viol\UDI_test\genrepresentativesuns\Release\RSP000006.rsp"
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Output Window
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
+gensuns.cpp
+gensuns.cpp(70) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+gensuns.cpp(70) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+gensuns.cpp(70) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+gensuns.cpp(81) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+gensuns.cpp(87) : warning C4267: 'argument' : conversion from 'size_t' to 'unsigned int', possible loss of data
+gensuns.cpp(88) : warning C4267: 'argument' : conversion from 'size_t' to 'unsigned int', possible loss of data
+gensuns.cpp(89) : warning C4267: 'argument' : conversion from 'size_t' to 'unsigned int', possible loss of data
+gensuns.cpp(99) : warning C4018: '<' : signed/unsigned mismatch
+gensuns.cpp(106) : warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+gensuns.cpp(108) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+gensuns.cpp(112) : warning C4305: 'initializing' : truncation from 'double' to 'float'
+gensuns.cpp(119) : warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+CBdspSKYSun.cpp
+CBdspGENPoint.cpp
+Generating Code...
+Linking...
+gensuns.obj : error LNK2019: unresolved external symbol "public: void __thiscall std::_String_base::_Xran(void)const " (?_Xran@_String_base@std@@QBEXXZ) referenced in function "public: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > & __thiscall std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::assign(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int,unsigned int)" (?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@ABV12@II@Z)
+gensuns.obj : error LNK2019: unresolved external symbol "public: void __thiscall std::_String_base::_Xlen(void)const " (?_Xlen@_String_base@std@@QBEXXZ) referenced in function "protected: bool __thiscall std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::_Grow(unsigned int,bool)" (?_Grow@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@IAE_NI_N@Z)
+gensuns.obj : error LNK2019: unresolved external symbol "public: void __thiscall std::locale::facet::_Register(void)" (?_Register@facet@locale@std@@QAEXXZ) referenced in function "class std::num_put<char,class std::ostreambuf_iterator<char,struct std::char_traits<char> > > const & __cdecl std::use_facet<class std::num_put<char,class std::ostreambuf_iterator<char,struct std::char_traits<char> > > >(class std::locale const &)" (??$use_facet@V?$num_put@DV?$ostreambuf_iterator@DU?$char_traits@D@std@@@std@@@std@@@std@@YAABV?$num_put@DV?$ostreambuf_iterator@DU?$char_traits@D@std@@@std@@@0@ABVlocale@0@@Z)
+gensuns.obj : error LNK2019: unresolved external symbol "public: class std::locale::facet const * __thiscall std::locale::_Getfacet(unsigned int)const " (?_Getfacet@locale@std@@QBEPBVfacet@12@I@Z) referenced in function "class std::num_put<char,class std::ostreambuf_iterator<char,struct std::char_traits<char> > > const & __cdecl std::use_facet<class std::num_put<char,class std::ostreambuf_iterator<char,struct std::char_traits<char> > > >(class std::locale const &)" (??$use_facet@V?$num_put@DV?$ostreambuf_iterator@DU?$char_traits@D@std@@@std@@@std@@@std@@YAABV?$num_put@DV?$ostreambuf_iterator@DU?$char_traits@D@std@@@std@@@0@ABVlocale@0@@Z)
+Release/genrepresentativesuns.exe : fatal error LNK1120: 4 unresolved externals
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Results
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+Build log was saved at "file://e:\Projects\Viol\UDI_test\genrepresentativesuns\Release\BuildLog.htm"
+genrepresentativesuns - 5 error(s), 12 warning(s)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+</font></table></body></html>

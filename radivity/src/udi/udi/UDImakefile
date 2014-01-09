@@ -1,0 +1,27 @@
+# RCSid: $Id: Rmakefile,v 2.63 2006/03/10 19:40:13 schorsch Exp $
+#
+# Compiles for image processing and display programs
+#
+# Modified by W. Jahn @ BDSP 08/05/2012
+
+ARCH = sun
+OPT = -O
+MACH = -DBSD
+SPECIAL = 
+CFLAGS = -I../common -L../lib $(OPT) $(MACH)
+CC = cc
+MLIB = -lm
+
+INSTDIR = /usr/local/bin
+
+LIBDIR = /usr/local/lib/ray
+
+PROGS = udi_vv
+
+all:	$(PROGS) $(SPECIAL)
+
+$(PROGS):udi_vv.o
+	$(CC) $(CFLAGS) -o $(PROGS) udi_vv.o -lrtrad $(MLIB)
+
+udi_wj.o:	../common/calcomp.h
+

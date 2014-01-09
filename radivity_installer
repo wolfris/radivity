@@ -1,0 +1,104 @@
+
+#!/bin/bash
+
+echo -e "\n\033[00;33mInitializing RadivitY update...\033[00m\n"
+
+
+echo -e "\033[00;31mRadivitY development version\033[00m"
+radivity_folder="RadivitY_dev"
+
+if [ ! -z "$(uname -a | grep Linux)" ]; then
+   system="linux"
+   server_name="/media/R"
+   bin_remove="{bin_win,bin_osx}"
+   bin_move="bin_linux"
+   launch_remove="cygwin"
+   launch_move="unix"
+elif [ ! -z "$(uname -a | grep Cygwin)" ]; then
+   system="cygwin"
+   server_name="//BDSP-SRV03.bdspuk02.local/Templates"
+   bin_remove="{bin_osx,bin_linux}"
+   bin_move="bin_win"
+   launch_remove="unix"
+   launch_move="cygwin"
+elif [ ! -z "$(uname -a | grep Darwin)" ]; then
+   system="osx"
+   server_name="/Volumes/Templates"
+   bin_remove="{bin_win,bin_linux}"
+   bin_move="bin_osx"
+   launch_remove="cygwin"
+   launch_move="unix"
+else
+   echo "Could not determine the system architecture."
+   exit
+fi
+
+srcfolder_name=$server_name/$radivity_folder
+
+if [ "$USER" == "jahnw" -o "$USER" == "wolfram" ]; then 
+   echo "Deleting backup files..."
+   find "$srcfolder_name"/radivity/ -type f -name "*~" -delete
+fi 
+
+for id_file in $(ls $HOME/bin/radivity/tmp/rad_pid* 2> /dev/null); do
+    ps | grep $(less $id_file) | grep -v grep > $HOME/bin/radivity/tmp/test_id
+done
+
+if [ -e $HOME/bin/radivity/tmp/test_id ]; then
+   if [ -z $(/usr/bin/find $HOME/bin/radivity/tmp/ -empty -name test_id) ]; then
+      echo -e "\033[00;31mWARNING!\033[00m\nYou are running RadivitY, updating it could interfere with the process.\nPlease wait until you have finished all your RadivitY processes and try again.\n"
+      false
+      exit
+   fi
+fi    
+
+
+rm -rf $HOME/bin/radivity
+
+echo "Copying files..."
+if [ -e $HOME/bin ]; then
+   cp -r "$srcfolder_name"/radivity $HOME/bin/radivity
+else
+   mkdir $HOME/bin
+   cp -r "$srcfolder_name"/radivity $HOME/bin/radivity
+fi
+eval "rm -r $HOME/bin/radivity/$bin_remove"
+mv $HOME/bin/radivity/$bin_move $HOME/bin/radivity/bin
+rm $HOME/bin/radivity/launch_radivity_$launch_remove
+mv $HOME/bin/radivity/launch_radivity_$launch_move $HOME/bin/radivity/launch_radivity
+
+if [ -e $HOME/.climate_lib ]; then
+   echo "Updating the climate library..."
+   cp -r "$server_name"/climate_lib/* $HOME/.climate_lib
+else
+   echo "Updating the climate library..."
+   mkdir $HOME/.climate_lib
+   cp -r "$server_name"/climate_lib/* $HOME/.climate_lib
+fi
+
+rm -f $HOME/.bash_rad.inc
+cp "$srcfolder_name"/radivity/.setup/.bash_rad."$system" $HOME/.bash_rad.inc
+if [ -z "$(cat $HOME/.bashrc | grep '.bash_rad.inc')" ]; then
+   echo "need to include .bash_rad.inc"
+   echo -e "if [ -e \""'${HOME}'"/.bash_rad.inc\" ];then\n    source \""'${HOME}'"/.bash_rad.inc\"\nfi" >> $HOME/.bashrc
+fi
+
+
+
+echo "Copying manual to your 'My documents' folder..."
+
+manfolder=$HOME"/man/man1"
+if [ ! -e $manfolder  ]; then
+   mkdir -p $manfolder
+fi	 
+
+cp "$srcfolder_name"/doc/radivity.troff $manfolder"/radivity.1"
+cp -r "$srcfolder_name"/doc/pdf $HOME/bin/radivity/doc
+
+if [ "$system" == "cygwin" ]; then
+   mydocuments="//BDSP-SRV03.bdspuk02.local/Users Shared Folders/"$USER"/My Documents"
+   cp -r "$srcfolder_name"/doc/radivity_html "$mydocuments"
+   cp "$srcfolder_name"/doc/pdf/radivity.pdf "$mydocuments"/radivity_manual.pdf
+fi
+
+

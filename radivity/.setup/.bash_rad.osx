@@ -1,0 +1,9 @@
+export TERM=xterm-256color
+
+export RAYPATH=.:/usr/local/lib/ray:/usr/share/radiance
+export PATH=$PATH:$HOME/bin/radivity:$HOME/bin/radivity/scripts:$HOME/bin/radivity/bin:$HOME/bin/radivity/.setup
+export PYTHONPATH=$PYTHONPATH:.:$HOME/bin/radivity/scripts/py_modules
+export MANPATH=$MANPATH:$HOME/man
+export RAYLIB=/usr/share/radiance
+
+alias radivity='launch_radivity'

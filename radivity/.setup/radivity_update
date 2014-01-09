@@ -1,0 +1,11 @@
+#!/bin/bash
+
+radivity_folder="RadivitY"
+
+if [ ! -z "$(uname -a | grep Cygwin)" ]; then
+   //BDSP-SRV03/Templates/$radivity_folder/radivity_installer && echo -e  "\n\e[00;33mRadivitY succesfully updated!\e[00m\n"
+elif [ ! -z "$(uname -a | grep Linux)" ]; then
+   /media/R/$radivity_folder/radivity_installer && echo -e  "\n\e[00;33mRadivitY succesfully updated!\e[00m\n"
+elif [ ! -z "$(uname -a | grep Darwin)" ]; then
+   /Volumes/Templates/$radivity_folder/radivity_installer && echo -e  "\n\e[00;33mRadivitY succesfully updated!\e[00m\n"
+fi

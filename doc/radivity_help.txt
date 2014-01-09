@@ -1,0 +1,175 @@
+RadivitY 1.0 "02 May 2013"
+NAME
+RadivitY - ChapmanBDSP RADIANCE Productivity Tool
+SYNOPSIS
+radivity [ options ] 
+DESCRIPTION
+RadivitY is an interface to apply radiance programming in a more user-friendly and efficient
+way. Through RadivitY you can simulate (as per May 2013 status) Irradiation Mapping and various
+Daylight studies, like Daylight Factor, Illuminance and UDI (Useful Daylight Index).
+Options (to run RadivitY use no options)
+
+-h
+help; this option will display the RadivitY manpage. 
+
+INSTALLING RADIVITY
+Before installing RadivitY please make sure that you have an updated version of Cygwin installed on your computer (minimum requirements: Pyhton 2.7, Mintty, Gnuplot). Otherwise please update Cygwin downloading the setup binary from their webpage (all the minimum requirements should be part of the standard install/update). Note that it is not necessary to set environment variables in the Cygwin launcher. Environment variables are set through .bashrc files which are part of the RadivitY installation.
+
+You also need a working RADIANCE installation on your computer. Ideally RADIANCE should be installed in Cygwin  at /usr/local/ (as opposed to being a part of a DAYSIM or DIVA installation), but DAYSIM/DIVA RADIANCE installation should also work.
+
+To install RadivitY open a Cygwin shell, go to the R-drive and access the RadivitY folder
+ R:100- Modelling GeneralRadivitY (remember that the R: drive is accessed via /cygdrive/r/...in cygwin).
+
+On the command line, run ./radivity_installer. This will copy the necessary files to your local machine (scripts, libraries etc)
+
+Once installed type again radivity  and a new window  with RadivitY will open.  
+
+UPDATING RADIVITY
+RadivitY is still work in progress so make sure you have the latest version on your local drive. To
+do so, update the software in cygwin with the command radivity_update before you access it with
+the command radivity (you can do that from anywhere, there is no need to change to the R-drive for updating). 
+
+In the folder R:100- Modelling GeneralRadivitY there is a `to do list.doc' MS Word document, where you can
+add suggestions to improve the software or report bugs you found while using it. The actions already
+implemented on that list appear as crossed text.
+
+
+RUNNING RADIVITY
+Before actually running RadivitY you need to set up the working directory. In order to do so, first create a folder in which you want to run your case (remember
+that the path to your local RadivitY folder should not have any spaces). Then change directory (cd) to that folder, and type mkf (make folderstructure). This will create the folders necessary to run RadivitY.
+
+You then need to populate the folders with the input files as detailed below (depending on what case you are running you need different input files).
+
+When running RadivitY from a project folder, the first thing it will ask you is to specify the city. There is a climate files library,
+which is located at R:climate_lib (the climate files are copied to your local machine when you install RadivitY, so you do not need to be online to run RadivitY). In order for RadivitY to recognise your city, you need to type it
+the same way it is in the library. The naming convention is caps for every first letter and no
+spaces. (e.g. London, SaoPaulo). It might recognise if you type all lower case, but then if next time
+you type upper case, the software will not recognise the climate coefficients generated earlier and
+there will be an error message. So stick to the naming convention described above to avoid errors.
+
+If your city is not yet in the database, you can add the epw file to R:climate_lib. You will need to update RadivitY (see above) in order to update your local climate library and activate the added city.
+
+After defining the city, you will reach the main menu, where you can navigate to the desired RadivitY function using the indicated
+number+ENTER.
+
+If for some reason you are running RadivitY from a different folder (i.e. a folder that is not a project folder), RadivitY will ask you for the path to your project before asking you for the city.
+
+RADIVITY IN PARALLEL
+RadivitY can be run in parallel (i.e. you can run several instances of RadivitY simultaneously), but some precautions need to be taken:
+
+Different Modules
+When running several instances of RadivitY on the same project, but in different modules (e.g. one in Daylight Factor and one in Irradiation Mapping), just make sure you have all the input files in their respective folders. It should then be no problem to run them in parallel from the same project folder. The only source of conflict that could arise is that you might want different scene files in each module (one geometry for Irradiation Mapping and a different one for Daylight Factor), or different views etc. If that is the case, rather then putting both scenes in the scene folder, create a different project folder for each instance and run one instance of RadivitY from each folder (as RadivitY would run all scenes in all instances, which would take unnecessaryly long). 
+
+Same Module
+If you need to run several instances of RadivitY on the same project and in the same module (e.g. you might need to run Daylight Factor for different scenes such that the grid of one scene does not match the grid of another), you will need to create several project folders-each for every scene-and run one instance of RadivitY from each project folder.
+
+IRRADIATION MAPPING
+Irradiation Mapping produces renderings of the scene(s) with colour mapping of the levels of irradiation on selected surfaces from different angles/positions. 
+Input files:
+
+Scene (.rad file)
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered).
+
+View (.vf file)
+These are the different views at the scene. Again you can have several views, each of them will be rendered for each of the scenes (anything with a .vf extension will be considered).
+
+Schedule (.sc file)
+This is optional. Standard schedule options are available through RadivitY as well.
+
+
+As you run the Irraditaion Mapping RadivitY will ask for the following options:
+Options:
+
+
+LEED IEQ 8.1 CREDIT
+To be completed when updated.
+
+DAYLIGHT FACTOR
+The Daylight Factor is the fraction of external light that penetrates into the rooms of the building. As per convention the Daylight Factor is calculated using an overcast sky. Results can be the Factors on an Ecotect grid, images (.png) created with GNUplot or a complete RADIANCE rendering.
+Input files:
+
+Scene (.rad file)
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered). You can name your scene file(s) however you wish, as long as the names have no spaces. Make sure your materials properties are correct.
+
+
+Grid (.pts file)
+The Daylight Factor is calculated on grid points (.pts file), which can be obtained exporting a grid from Ecotect. The grid files should be
+called room_X.pts, X being the floor level. Make sure you keep the same grid in Ecotect, if you
+want to import the results later.
+
+
+View (.vf file)
+Alternatively to the grid, you can plot the Daylight Factor on a surface. For this you will need a (parallel) view with clipping planes so you can see internal surfaces. Views also normally require a filter in order to display only the surface(s) of interest. If you want a rendered output, you do not need a grid file.
+
+
+Filter (.rad file)
+When producing Daylight Factor renderings (as opposed to grid based solutions) you may need a filter file in order to display the Daylight Factor only on the surface(s) that you want. This filter should render all other surfaces as black (R 0-G 0-B 0). 
+
+
+
+Note that if you have multiple scenes and multiple grids (or views), RadivitY will combine them all (which might become quite time consuming).
+
+
+RadivitY will ask you the level of accuracy, low, high or custom. Note that high takes a looong
+time!
+
+Low: w -h -I+ -ab 4 -aa 0.1 -ad 512 -as 256 -ar 32
+
+High: -w -h -I+ -ab 6 -aa 0.1 -ad 512 -as 256 -ar 32
+
+Next question is if you want to produce images. This will not greatly impact on your running time, so you
+might as well produce images just in case.
+
+When the simulation is completed you will find yourself back in the menu. The results are all
+located in the `out' folder with the type of simulation, date and time. The .dat file can be
+imported back into Ecotect on the `Grid Management' option under `Manage Grid Data'.
+The `analysis_DF' excel file contains average, minimum and percentages within certain thresholds for
+each grid on each scene.
+
+
+ILLUMINANCE
+Before running the simulation, make sure you have the scene and grid files (see topic above for
+naming convention and location of these files).
+
+For Illuminance you need to specify the day of the year (DD/MM) and the hour of the day (0-24). It
+will ask you to define two thresholds (type the two numbers separated by space + ENTER). If you just
+type ENTER it will assume the default values of 300 and 1000 lux. These thresholds will only be used
+on the `analysis_Illum' excel file and will have no impact on your output .dat file. Here, as for
+DF, the excel file contains average, minimum and percentages within the defined thresholds for each
+grid on each scene.
+
+UDI (USEFUL DAYLIGHT INDEX)
+UDI simulation requires a scene, a filter, view file and schedule.  The filter must have the same
+name as the view file, room_X_filter.rad for the filter and room_X.vf for the view
+file.  If it is the first time you are running UDI in this folder, it will calculate the coefficient
+files and the coefficient images. If it is not the first time you are running UDI, it will tell you
+that a coefficient file for that climate already exists and ask you if you want to use the existing
+coefficient file.  You can re-use it as long as it is the same climate and the same schedule.
+
+Then it will ask you to give 3 thresholds, separated by space. If you only want 3 bands (under,
+adequate and over illuminated), you can repeat one number, i.e. 300 300 15000. If you are
+re-running UDI, it will ask you if you wish to re-calculate the coefficient images (overwriting the
+previous one). You can only re-use the coefficient images if the scene
+and views are unchanged. If only the filter is changed, but the scene
+and view are the same, there is no need to re-calculate coefficient
+images.  If only the schedule is different, the coefficient files will
+be re-calculated, but not the coefficient images.  The coefficient
+files tell you how the sky looks like, they are only dependant on the
+climate. Whereas the coefficient images, depend only on your scene.
+
+Next step, it will ask you about the schedule file. You can find a
+schedule with UK working hours (9-18) disconsidering weekends and bank
+holidays R:100- Modelling GeneralRadivitYschedule. Copy
+and paste into your `schedule' folder.  It will ask you to re-type
+your schedule file (this is just a security check, for you to make
+sure your schedule file is the same that was used for the calculation
+of the coefficient file).  Here the output are images, so it is
+important that you have your view settings correct. If you need to
+correct the view file and re-run, remember to re-calculate the
+coefficient images.
+
+
+TROUBLE SHOOTING
+
+AUTHOR
+Wolfram Jahn (for ChapmanBDSP)

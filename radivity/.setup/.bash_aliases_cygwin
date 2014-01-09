@@ -1,0 +1,2 @@
+alias radivity='launch_radivity'
+alias xterm='mintty -s 81,25 -t radivity'

@@ -1,0 +1,234 @@
+#!/bin/bash
+
+header() {
+    echo "  *****************************************************************************"
+    echo "  **                _____           _ _       _ ___     __                   **"
+    echo "  **               |  __ \         | (_)     (_) \ \   / /                   **"
+    echo "  **               | |__) |__ _  __| |___   ___| |\ \_/ /                    **"
+    echo "  **               |  _  // _\` |/ _\` | \ \ / / | __\   /                     **"
+    echo "  **               | | \ \ (_| | (_| | |\ V /| | |_ | |                      **"
+    echo "  **               |_|  \_\__,_|\__,_|_| \_/ |_|\__||_|                      **"
+    echo "  **                                                                         **"
+    echo "  **                 BDSP Radiance Productivity Tool                         **"
+    echo "  **                                                                         **"
+    echo "  ***************************************************************************** "
+}
+
+options() {
+    echo -e "\n\n"
+    header
+    echo -e "\n\n\n  Please select which of the following modules you would like to use:\n"
+    echo -e "   1 - Irradiation Mapping\t\t2 - Daylight Availability"
+    echo -e "   3 - Shadow Sequence\t\t\t4 - LEED IEQ 8.1 Credit"
+    echo -e "   5 - Visualisation (Rendering)\t6 - Utilities"
+    echo -e -n "   7 - Glare Analysis\t\t\t8 - Exit\n\n\n\n  "
+}
+
+
+launch_menu() {
+    echo -e "\n"
+    header
+    echo -e -n "\n\n\n\n\n\n\n\n\n  Hello "$fullusername, "please specify a city:\n\n\n  "
+    read city
+    time_log=$(date +%F_%H-%M-%S)
+    rad_logfile=$PWD/log/$city"_"$time_log".bdsp"
+    city_climate_file=$(echo "$HOME"/.climate_lib/"$city".epw)
+    if [ -e "$city_climate_file" ]; then
+	cp "$city_climate_file" $PWD/climate
+	echo "City: "$city > $rad_logfile
+	options
+	read module
+	menu
+    else
+	echo -e "\n\n\n"
+	header
+	echo -e "\n\n\n  ******************************************************************"
+	echo -e -n "  *\n  * Please check if the climate file is in the data base.\n  * If not, please download the climate file.\n  *\n  *"
+	echo -e "*****************************************************************\n\n\n"
+	read -p "  Press [Enter] to exit.."
+    fi
+}
+
+print_error_message() {
+    echo -e "\n\n\n"
+    header
+    echo -e "\n\n\n  ******************************************************************"
+    echo -e -n "  *\n  * \033[0;31mRadivity finished with errors!\033[00m\n  * Please check the log files for information.\n  *\n  *"
+    echo -e "*****************************************************************\n\n\n"
+    read -p "  Press [Enter] to exit.."
+}
+
+menu(){
+    case $module in
+	1)
+	    echo "Module used: "$module" (Solar Energy/Irradiation Mapping)" >> $rad_logfile
+	    $RADIVSCRIPTS/irr.sh $rad_logfile $fullusername $cli_option
+	    if [ "$?" -gt 0 ]; then
+		print_error_message
+	    else
+		options
+		read module
+		menu
+	    fi;;
+	2)
+	    echo "Module used: "$module" (DA)" >> $rad_logfile
+	    $RADIVSCRIPTS/da.sh $rad_logfile $fullusername $(basename $city_climate_file) $cli_option
+	    if [ "$?" -gt 0 ]; then
+		print_error_message
+	    else
+		options
+		read module
+		menu
+	    fi;;
+	3)
+	    echo "Module used: "$module" (Shadow Sequence)" >> $rad_logfile
+	    $RADIVSCRIPTS/shadow.sh $rad_logfile $fullusername $(basename $city_climate_file)
+	    options
+	    read module
+	    menu
+	    ;;
+	4)
+	    echo "Module used: "$module" (LEED IEQ 8.1)" >> $rad_logfile
+	    $RADIVSCRIPTS/ieq.sh $rad_logfile $fullusername
+	    options
+	    read module
+	    menu
+	    ;;
+	5)
+	    echo "Module used: "$module" (Visualisation/Rendering)" >> $rad_logfile
+	    $RADIVSCRIPTS/render.sh $rad_logfile $fullusername $(basename $city_climate_file)
+	    options
+	    read module
+	    menu
+	    ;;
+	6)
+	    echo "Module used: "$module" (Utilities)" >> $rad_logfile
+	    $RADIVSCRIPTS/utilities.sh $rad_logfile $fullusername $cli_option
+	    if [ "$?" -gt 0 ]; then
+		print_error_message
+	    else
+		options
+		read module
+		menu
+	    fi;;
+	8)
+	    echo "  Exiting"
+	    find $PWD/out -mindepth 1 -type d -empty -delete > /dev/null
+	    sleep 0.3
+	    exit
+	    ;;
+    esac
+}
+
+get_user() {
+    case $USER in
+	jahnw)
+	    fullusername="Wolfram"
+	    ;;
+	conceicaoj)
+	    fullusername="Joanna"
+	    ;;
+	jains)
+	    fullusername="Shashank"
+	    ;;
+	gugelp)
+	    fullusername="Pablo"
+	    ;;
+	brunellig)
+	    fullusername="Gustavo"
+	    ;;
+	callejah)
+	    fullusername="Hermi"
+	    ;;
+	jovanovici)
+	    fullusername="Ivan"
+	    ;;
+	campbelln)
+	    fullusername="Neil"
+	    ;;
+	*)
+	    fullusername="Stranger"
+	    ;;
+	
+    esac
+}
+
+
+if [[ ! -e "$PWD"/scenes || ! -e "$PWD"/views ]]; then
+	echo -e "\n"
+	header
+	echo -e -n "\n\n\n\n\n\n\n  Your current working directory is \033[0;31mnot a RadivitY project folder\033[00m\n  Please indicate the path to your project:\n\n\n  "
+	read project_path
+	cd $project_path
+fi
+
+if [ ! -d $PWD/climate ];then
+    mkdir $PWD/climate
+else
+    rm -f $PWD/climate/*
+fi
+if [ ! -d $PWD/tmp ];then
+    mkdir $PWD/tmp
+else
+    rm -f $PWD/tmp/*
+fi
+if [ ! -d $PWD/log ];then
+    mkdir $PWD/log
+fi
+if [ ! -d $PWD/out ];then
+    mkdir $PWD/out
+fi
+
+input_folders=(filter filter/parallel grids scenes views views/parallel views/perspective visible_geometry)
+for item in ${input_folders[*]}; do
+    for file in $(ls $item/*{.pts,.rad,.vf} 2> /dev/null); do
+	if [ ! -z "$(file $file | grep 'CRLF')" ]; then
+	    echo -e "\n"
+	    header
+	    echo -e "\n\n\n  ******************************************************************"
+	    echo -e -n "  *\n  * Converting \033[0;33m"$file"\033[00m from DOS to UNIX.\n  *\n  *"
+	    echo -e "*****************************************************************\n\n\n"
+	    echo -e "  This might take a while for large files.."
+	    dos2unix $file 2> /dev/null
+	fi
+    done
+done
+
+
+
+get_user
+export RADIVSCRIPTS=$HOME/bin/radivity/scripts
+export RADIVBINS=$HOME/bin/radivity/bin
+if [ ! -z "$(uname -a | grep Cygwin)" ]; then
+    alias xterm='mintty -t xterm'
+fi
+if [ $# -eq 0 ]; then
+    cli_option=""
+    launch_menu
+elif [ "$1" == "-i" ]; then
+    if [ "$2" == "no_input_file" ]; then
+	echo -e "\n\n\n"
+	header
+	echo -e "\n\n  ******************************************************************"
+	echo -e -n "  *\n  * You have not specified an input file\n  * Please provide a valid input file.\n  * (type 'radivity -h' in the shell for instructions)\n  *\n  *"
+	echo -e "*****************************************************************\n\n\n"
+	read -p "  Press [Enter] to exit.."
+    else
+	if [ ! -e "$2" ]; then
+	    echo -e "\n\n\n"
+	    header
+	    echo -e "\n\n  ******************************************************************"
+	    echo -e -n "  *\n  * The input file you specified ($2) does not exist\n  * Please provide a valid input file.\n  * (type 'radivity -h' in the shell for instructions)\n  *\n  *"
+	    echo -e "*****************************************************************\n\n\n"
+	    read -p "  Press [Enter] to exit.."
+	else
+	    parse_input_file.sh $2
+	fi
+    fi
+elif [ "$1" == "-e" ]; then
+    cli_option="-e"
+    launch_menu
+fi
+
+
+

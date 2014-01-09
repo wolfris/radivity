@@ -1,0 +1,482 @@
+.TH RadivitY 1.0 "02 May 2013"
+
+
+
+\"**********************************************************************************************************************************
+.SH NAME
+RadivitY \- ChapmanBDSP RADIANCE Productivity Tool
+
+
+
+\"**********************************************************************************************************************************
+.SH SYNOPSIS
+\fBradivity [ options ] [ file ]\fR 
+
+
+
+\"**********************************************************************************************************************************
+.SH DESCRIPTION
+RadivitY is an interface to apply RADIANCE programming in a more user-friendly and efficient
+way. Through RadivitY you can simulate (as per May 2013 status) Irradiation Mapping and various
+Daylight studies, like Daylight Factor, Illuminance and UDI (Useful Daylight Index). You can also do calculations for the LEED IEQ 8.1 certification and produce high quality rendering under different sky conditions.
+
+Radivity does not normally take command line options. Exeptions below:
+
+.SS Options
+.TP
+-h
+Help; this option will display the RadivitY manpage. 
+.TP
+-i \fIinput file\fR
+Run RadivitY with an input file. The input file needs to be specified with (relative or full) path. Input files have exactly the same format as RadivitY log files. This means that you can simply take the log file from a previous run and modifiy it to your needs and then run RadivitY with this option. Keep in mind that input files must be \fBCONSISTENT\fR (e.g. schedule file must match the climate coefficients). There are no sophisticated logical checks to alert you of inconsistencies. \fBSo far only implemented for UDI.\fR
+.TP
+-e
+Expert mode. This mode enables more options and gives greater control over RADIANCE. The option has not been implemented yet. 
+
+
+
+\"**********************************************************************************************************************************
+.SH INSTALLING RADIVITY
+Before installing RadivitY please make sure that you have an updated version of Cygwin installed on your computer (minimum requirements: Pyhton 2.7, Mintty, Gnuplot). Otherwise please update Cygwin downloading the setup binary from their webpage\-\fICygwin.com/setup.exe\fR (all the minimum requirements should be part of the standard install/update). Note that it is \fBnot\fR necessary to set environment variables in the Cygwin launcher. Environment variables are set through \fI.bashrc\fR files (standard bash/POSIX practice) which are part of the RadivitY installation (you do not need to do anything).
+
+You also need a working RADIANCE installation on your computer. Ideally RADIANCE should be installed in Cygwin  at /usr/local/bin (as opposed to being a part of a DAYSIM or DIVA installation), but DAYSIM/DIVA RADIANCE installation should also work.
+
+To install RadivitY open a Cygwin shell, go to the R-drive and access the RadivitY folder
+\fI R:\\100- Modelling General\\RadivitY\fR (remember that the R: drive is accessed via \fI/cygdrive/r/...\fRin Cygwin).
+
+On the command line, run \fI./radivity_installer\fR. This will copy the necessary files to your local machine (scripts, libraries etc)
+
+Once installed again type \fIradivity \fR and a new window  with RadivitY will open.  
+
+
+
+\"**********************************************************************************************************************************
+.SH UPDATING RADIVITY
+RadivitY is still work in progress so make sure you have the latest version on your local drive. To
+do so, update the software in Cygwin with the command\fI radivity_update\fR before you access it with
+the command \fIradivity\fR (you can do that from anywhere, there is no need to change to the R-drive for updating). 
+
+In the folder \fIR:\\100- Modelling General\\RadivitY\fR there is a `to do list.doc' MS Word document, where you can
+add suggestions to improve the software or report bugs you found while using it. The actions already
+implemented on that list appear as \fIcrossed text\fR.
+
+
+
+\"**********************************************************************************************************************************
+.SH RUNNING RADIVITY
+Before actually running RadivitY you need to set up the working directory. In order to do so, first create a folder in which you want to run your case (remember
+that the path to your local RadivitY folder should not have any spaces). Then change directory (cd) to that folder, and type \fImkf\fR (make folderstructure). This will create the folders necessary to set up a project and run RadivitY.
+
+You then need to populate the folders with the input files as detailed below (depending on what case you are running you need different input files).
+
+When running RadivitY from a project folder, the first thing it will ask you is to specify the city. There is a climate files library,
+which is located at\fI R:\\climate_lib\fR (the climate files are copied to your local machine when you install RadivitY, so you do not need to be online to run RadivitY). In order for RadivitY to recognise your city, you need to type it
+the same way it is in the library. The naming convention is caps for every first letter and no
+spaces. (e.g. London, SaoPaulo). It might recognise if you type all lower case, but then if next time
+you type upper case, the software will not recognise the climate coefficients generated earlier and
+there will be an error message. So stick to the naming convention described above to avoid errors.
+
+If your city is not yet in the database, you can add the\fI epw\fR file to \fIR:\\climate_lib\fR. You will need to update RadivitY (see above) in order to update your local climate library and activate the added city.
+
+After defining the city, you will reach the main menu, where you can navigate to the desired RadivitY function using the indicated
+number+ENTER.
+
+.SS Not in project folder
+If for some reason you are running RadivitY from a different folder (i.e. a folder that is not a project folder), RadivitY will ask you for the path to your project before asking you for the city.
+
+.SS Output
+Once RadivitY has completed the required task (module) it will take you back to the main menu, where you can start a new calculation again selecting one of the options. The results of a Radivity calculation are located in the 'out' folder (which is created the first time an instance of RadivitY is run on the project). The corresponding folder will have a name that includes the type of simulation, date and time so you can easily find the results.
+
+.SS Log files
+Each time you run RadivitY, it will produce a log file which is stored in the 'log' folder and which has a time stamp from the moment you started the RadivitY calculation. In the log file you will find the options you used for that particular run, so you can replicate it if need be. The log file is also useable as an input file for RadivitY (which could save some time setting up the run).
+
+
+
+\"**********************************************************************************************************************************
+.SH RADIVITY IN PARALLEL
+RadivitY can be run in parallel (i.e. you can run several instances of RadivitY simultaneously), but some precautions need to be taken:
+.TP
+\fIDifferent Modules\fP
+When running several instances of RadivitY on the same project, but in different modules (e.g. one in Daylight Factor and one in Irradiation Mapping), just make sure you have all the input files in their respective folders. It should then be no problem to run them in parallel from the same project folder. The only source of conflict that could arise is that you might want different scene files in each module (one geometry for Irradiation Mapping and a different one for Daylight Factor), or different views etc. If that is the case, rather then putting both scenes in the scene folder, create a different project folder for each instance and run one instance of RadivitY from each folder (since RadivitY would run \fIall\fR scenes in \fIall\fR instances, which would take unnecessaryly long). 
+.TP
+\fISame Module\fP
+If you need to run several instances of RadivitY on the same project and in the same module (e.g. you might need to run Daylight Factor for different scenes such that the grid of one scene does not match the grid of another), you will need to create several project folders\-each for every scene\-and run one instance of RadivitY from each project folder.
+
+
+
+\"**********************************************************************************************************************************
+.SH IRRADIATION MAPPING
+Irradiation Mapping produces renderings of the scene(s) with colour mapping of the levels of irradiation on selected surfaces from different angles/positions. 
+.SS Input files:
+.TP
+\fIScene (.rad file)\fP
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered).
+.TP
+\fIView (.vf file)\fP
+These are the different views at the scene. Again you can have several views, each of them will be rendered for each of the scenes (anything with a .vf extension will be considered).
+.TP
+\fIFilter (.rad file)\fP
+You will need a filter file in order to display the Irradiation Mapping only on the building(s) that you want. This filter should render all other buildings as black (R 0-G 0-B 0). The name of the filter should be XYZ_filter.rad, where XYZ is the name of the scene. 
+.TP
+\fISchedule (.sc file)\fP
+This is optional. Standard schedule options are available through RadivitY as well.
+.TP
+\fIVisible Geometry (.rad file)\fP
+This is optional. It can be used to hide certain parts of the geometry in order to have a better view at interesting parts.
+.PP
+.PP
+As you run the Irraditaion Mapping RadivitY will ask for the following options:
+.SS Options:
+.TP
+\fIScript Options\fP
+The Irradiation Mapping module is based on a previously existing script that had a series of command line options. You can combine several of them by entering the corresponding letters separated by space and pressing ENTER. For a new complete Irradiation Mapping you would not normally want any options, so you just press ENTER. The individual command line options are explained below (taken from Andy's Irradiation Mapping manual).
+
+.TS
+center tab (:);
+lw20 lw50.
+\fI-no_climate\fR:T{
+This option will reuse the climate data from the previous run, which means that you do not have to re-input all of the latitude and longitude data.
+T}:
+:
+\fI-no_images\fR:T{
+This option will cause the script to skip the calculation of the irradiation maps (i.e. it will prevent the images from being rendered). This is probably not useful on its own\-you would usually use the \fIrefinish\fR option instead.
+T}
+:
+\fI-no_octrees\fR:T{
+This option will cause the script to skip the generation of the scene and visible geometry octrees.  This can be useful if your scene is very complicated and generating the octrees takes a lot of time. The filter octrees will still be regenerated.
+T}
+.TE
+
+
+\&
+
+.TS
+center tab (:);
+lw20 lw50.
+\fI-refinish\fR:T{
+This option is the same as specifying all of no_climate, no_images and no_octrees. The entire radiation map calculation phase will be skipped and it goes straight to processing the images. This is useful if you have changed the filters or the falsecolor scales.
+T}
+:
+\fI-reuse_filters\fR:T{
+This option will prevent the recalculation of the filters. If you have a very complicated scene this can save some time if you have already successfully run the same views already.
+T}
+:
+\fI-reuse_cache\fR:T{
+This option will cause Radiance to use the same ambient cache as on previous runs. This is very useful e.g. if you want to add a new view, or to render images of a different size. The calculation will be significantly quicker than if Radiance starts from scratch with a new ambient_cache.
+T}
+:
+\fI-insolation_hours\fR:T{
+This option is pretty much independent of the other options. Specifying this will cause radiance to calculate the number of hours for which sun is incident on each point in the scene.  These generally take a long time to run, so it is a good idea to reduce the image size.
+T}
+.TE
+
+.TP
+\fIRADIANCE Parameters\fP
+The default RADIANCE parameters will be listed. You can adjust them by typing 'y' and pressing ENTER. When doing so, you will be asked to enter the parameter(s) you want to adjust. Follow the format indicated in the example and press ENTER.
+
+\&
+
+.TP
+\fIFalsecolor Image Parameters\fP
+You will be asked for a series of parameters regarding the falsecolor image:
+
+.TS
+center tab (:);
+lw20 lw50.
+\fIband\fR:T{
+Show discrete bands rather than a smooth gradient in the Irradiation Mapping.
+T}
+:
+\fINumber of Divisions\fR:T{
+Number of divisions in the legend of the falsecolor image.
+T}
+:
+\fIScale\fR:T{
+Highest value on the legend. This number should be in accordance with the number of divisions in order to render a legible legend.
+T}
+:
+\fIOther\fR:T{
+You can adjust all other \fIfalsecolor\fR options by entering the values in the format given. Note that this las option will override the previous options.
+T}
+.TE
+
+.TP
+\fIImage Size\fP
+You can change the size of the output images (pixels). If you choose to do so, type 'y', press ENTER and in the next prompt enter the x and y resolution separated by space and press ENTER.
+.TP
+\fIScene Rotation\fP
+You might want to obtain Irradiation Mappings for several orientations of the building. By default RadivitY assumes that your scene points due North (0 degrees rotation). If choose 'y', you can enter several orientations separated by space, and RadivitY will produce Irradiation Mappings for all of them (sequentially).
+.TP
+\fISchedule\fP
+If you want the Irradiation on a building during a certain period of time (e.g. during the summer), you can create a schedule file and put it in the \fIschedule\fR folder. If RadivitY finds a schedule, it will ask you whether you want to use it or not. If not, or if it does not find one, it will ask you whether you want to create a schedule. Follow instructions on screen.
+
+.SS Output
+Upon completion, RadivitY will produce an image for each scene and each view. If filters are correctly defined, only the building in question should display Irradiation Mapping, while surrounding buildings and the ground should be shown as grey.
+
+
+
+\"**********************************************************************************************************************************
+.SH LEED IEQ 8.1 CREDIT
+\fBTo be completed when updated.\fR
+.SS Input files:
+.TP
+\fIScene (.rad file)\fP
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered). You can name your scene file(s) however you wish, as long as the names have no spaces. Make sure your material properties are correct.
+
+.TP
+\fIGrid (.pts file)\fP
+LEED IEQ 8.1 percentages are calculated on grid points (\fI.pts file\fR), which can be obtained exporting a grid from Ecotect. The grid files should be
+called \fIroom_X.pts\fR, X being the floor level.
+
+.TP
+\fIView (.vf file)\fP
+You will need a (parallel) view with clipping planes to get images. Views also normally require a filter in order to display only the surface(s) of interest. If you want a rendered output, you do not need a grid file.
+
+.TP
+\fIFilter (.rad file)\fP
+You will need a filter file in order to display the ____ only on the surface(s) that you want. This filter should render all other surfaces as black (R 0-G 0-B 0). The name of the filter should be XYZ_filter.rad, where XYZ is the name of the scene. 
+
+.PP
+RadivitY will ask you for a couple of options:
+.SS Options:
+.TP
+\fILevel of accuracy\fP
+This can be low, high or custom. Note that with the high option it takes a very long time to run! Below the corresponding RADIANCE parameters are listed. With the \fIcustom\fP option you can adjust all of them separately.
+
+Low: \fIw -h -I+ -ab 4 -aa 0.1 -ad 512 -as 256 -ar 32\fR
+
+High: \fI-w -h -I+ -ab 6 -aa 0.1 -ad 512 -as 256 -ar 32\fR
+
+Enter the option you want by typing low/high/custom (whichever you want) and pressing ENTER.
+
+
+
+\"**********************************************************************************************************************************
+.SH DAYLIGHT FACTOR
+The Daylight Factor is the fraction of external light that penetrates into the rooms of the building. As per convention the Daylight Factor is calculated using an overcast sky. Results can be the Factors on an Ecotect grid, images (\fI.png\fR) created with GNUplot or a complete RADIANCE rendering.
+.SS Input files:
+.TP
+\fIScene (.rad file)\fP
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered). You can name your scene file(s) however you wish, as long as the names have no spaces. Make sure your material properties are correct.
+
+.TP
+\fIGrid (.pts file)\fP
+The Daylight Factor is calculated on grid points (\fI.pts file\fR), which can be obtained exporting a grid from Ecotect. The grid files should be
+called \fIroom_X.pts\fR, X being the floor level. Make sure you keep the same grid in Ecotect, if you
+want to import the results later.
+
+.TP
+\fIView (.vf file)\fP
+Alternatively to the grid, you can plot the Daylight Factor on a surface. For this you will need a (parallel) view with clipping planes so you can see internal surfaces. Views also normally require a filter in order to display only the surface(s) of interest. If you want a rendered output, you do not need a grid file.
+
+.TP
+\fIFilter (.rad file)\fP
+When producing Daylight Factor renderings (as opposed to grid based solutions) you will need a filter file in order to display the Daylight Factor only on the surface(s) that you want. This filter should render all other surfaces as black (R 0-G 0-B 0). If you want to calculate the Daylight Factor on a grid, you do not need a filter.
+
+.PP
+Note that if you have multiple scenes and multiple grids (or views), RadivitY will combine them all (which might become quite time consuming).
+
+.PP
+RadivitY will ask you for a couple of options:
+.SS Options:
+.TP
+\fILevel of accuracy\fP
+This can be low, high or custom. Note that with the high option it takes a very long time to run! Below the corresponding RADIANCE parameters are listed. With the \fIcustom\fP option you can adjust all of them separately.
+
+Low: \fIw -h -I+ -ab 4 -aa 0.1 -ad 512 -as 256 -ar 32\fR
+
+High: \fI-w -h -I+ -ab 6 -aa 0.1 -ad 512 -as 256 -ar 32\fR
+
+Enter the option you want by typing low/high/custom (whichever you want) and pressing ENTER.
+
+.TP
+\fIProduce images\fP
+This option is only available when running on a grid. If answered with 'y' RadivitY will produce GNUplot plots of the values of the Daylight Factor on the grid(s). This will not greatly impact on your running time, so you might as well produce images just in case. Select your option (y or n) and press ENTER.
+
+.SS Output
+The \fI.dat\fR file produced by the Daylight Factor module can be imported back into Ecotect on the `Grid Management' option under `Manage Grid Data'.
+The `\fIanalysis_DF\fR' csv file contains average, minimum and percentages within certain thresholds (2% and 5%) for each grid on each scene.
+
+
+
+\"**********************************************************************************************************************************
+.SH ILLUMINANCE
+The Illuminance option is very similar to the Daylight Factor option, the difference being that Illuminance gives the actual level of light in the room (as opposed to the fraction of the external light). Thus its results depend on the brightness and nature of the sky.
+
+.SS Input files:
+.TP
+\fIScene (.rad file)\fP
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered). You can name your scene file(s) however you wish, as long as the names have no spaces. Make sure your materials properties are correct.
+
+.TP
+\fIGrid (.pts file)\fP
+The Daylight Factor is calculated on grid points (\fI.pts file\fR), which can be obtained exporting a grid from Ecotect. The grid files should be
+called \fIroom_X.pts\fR, X being the floor level. Make sure you keep the same grid in Ecotect, if you
+want to import the results later.
+
+.TP
+\fIView (.vf file)\fP
+Alternatively to the grid, you can plot the Daylight Factor on a surface. For this you will need a (parallel) view with clipping planes so you can see internal surfaces. Views also normally require a filter in order to display only the surface(s) of interest. If you want a rendered output, you do not need a grid file.
+
+.TP
+\fIFilter (.rad file)\fP
+When producing Daylight Factor renderings (as opposed to grid based solutions) you will need a filter file in order to display the Daylight Factor only on the surface(s) that you want. This filter should render all other surfaces as black (R 0-G 0-B 0). If you want to calculate the Daylight Factor on a grid, you do not need a filter.
+
+.PP
+Note that if you have multiple scenes and multiple grids (or views), RadivitY will combine them all (which might become quite time consuming).
+
+.PP
+RadivitY will ask you for a few options:
+.SS Options:
+.TP
+\fIDay of the year\fP
+As stated above the Illuminance calculation depends on the sky and thus it needs to create one based on information of location and time. You can enter several dates (separated by spaces) which will be calculated sequentially. The input format is DD/MM. Press ENTER to continue.
+
+.TP
+\fIHour of the day\fP
+For each of the dates entered you need to provide a time of the day. The hour format is 0-24. Press ENTER to continue.
+
+.TP
+\fISky\fP
+You can calculate Illuminance values for several different skies, and you need to select an appropiate one for each of the dates you entered before. Select your preferred sky by typing e.g. +s and then pressing ENTER.
+
+.TP
+\fIBrightness\fP
+When selecting a cloudy sky the brightness of the sky can be either determined from the wheather file (based on a frequency analysis\-Desing Sky), or directly calculated by RADIANCE based on the latitude. Type y or n and press ENTER.
+
+.TP
+\fIThresholds\fP
+You can chose two thresholds that will be plotted as contour curves in the output images (if you decide to plot images). Percentage of areas also will be computed based on these thresholds. If you press ENTER without specifying thresholds, RadivitY will use the default thresholds indicated (300 and 1000 lux). The thresholds are only important for numerical ouptut of percentages and for the GNUplot images. They do not alter the results in the \fI.dat\fP file that is re-imported into Ecotect.
+
+.TP
+\fILevel of accuracy\fP
+This can be low, high or custom. Note that with the high option it takes a very long time to run! Below the corresponding RADIANCE parameters are listed. With the \fIcustom\fP option you can adjust all of them separately.
+
+Low: \fIw -h -I+ -ab 4 -aa 0.1 -ad 512 -as 256 -ar 32\fR
+  
+High: \fI-w -h -I+ -ab 6 -aa 0.1 -ad 512 -as 256 -ar 32\fR
+
+Enter the option you want by typing low/high/custom (whichever you want) and pressing ENTER.
+
+.TP
+\fIProduce images\fP
+This option is only available when running on a grid. If answered with 'y' RadivitY will produce GNUplot plots of the values of the Daylight Factor on the grid(s). This will not greatly impact on your running time, so you might as well produce images just in case. Select your option (y or n) and press ENTER.
+
+.SS Output
+The \fI.dat\fR file produced by the Illuminance module can be imported back into Ecotect on the `Grid Management' option under `Manage Grid Data'.
+The `\fIanalysis_Illum\fR' csv file contains average, minimum and percentages within the given thresholds for each grid on each scene.
+
+
+
+\"**********************************************************************************************************************************
+.SH UDI (USEFUL DAYLIGHT INDEX)
+UDI visualises the percentage of time different areas of a room are within certain ranges of illumination. In other words the colouring of the resulting UDI image represents the amount of time the room is within given illumination ranges.
+
+Since UDI is typically run considering the whole year, it would be prohibitively expensive to produce a RADIANCE rendering for each hour (there are 8760 hours in a year). Instead, the UDI module divides the sky into 145 patches (and 72 corresponding solar positions), and calculates the illumination at any given hour using a linear combination of the various sky patches. To do so, RadivitY needs to calculate the weighting coefficients of the linear combination based on the local climate, and then render the scene in question for all the sky patches.
+
+The weighting coefficients only need to be computed once for a given location with a given schedule. It takes about 1 hour to do so, and ideally the coefficients can be re-used if a new UDI instance needs to be run (e.g. a modified geometry). They need to be re-computed if e.g. the schedule changes.
+
+The sky-patch renderings of the scene take up most of the run-time of UDI. Similarly to the weighting coefficients they cam be re-used, but only if the geometry (and location) does not change. A possible case could be if e.g. a different schedule needs to be analised.
+
+RadivitY will guide you through the decision making process.
+
+.SS Input files:
+.TP
+\fIScene (.rad file)\fP
+This is the geometry of the scene, which can be obtained exporting from Ecotect or through the dxf2rad command. You can have several scenes (e.g. if you have different possible geometries for the building in question) which will be calcualted sequentially (anything with a .rad extension will be considered).
+.TP
+\fIView (.vf file)\fP
+These are the different views at the scene. Again you can have several views, each of them will be rendered for each of the scenes (anything with a .vf extension will be considered).
+.TP
+\fIFilter (.rad file)\fP
+You will need a filter file in order to show only on the surface(s) that you want in the UDI images. This filter should render all other surfaces as black (R 0-G 0-B 0). The name of the filter should be XYZ_filter.rad, where XYZ is the name of the view (\fI.vf\fR file). 
+.TP
+\fIGrid (.pts file)\fP
+For faster calculations you can use a grid (\fI.pts file\fR) instead of a view, which can be obtained from Ecotect. In the case you choose to use a grid, you do not need a filter either. 
+.TP
+\fISchedule (.sc file)\fP
+This is optional. Standard schedule options are available through RadivitY as well.
+.PP
+RadivitY will ask you for a few options:
+.SS Options:
+.TP
+\fICalculate weighting coefficients\fP
+If RadivitY finds an existing coefficient file, it will ask whether you want to use it, or whether you want to re-calculate the weighting coefficients. Select 'y' or 'n' based on criteria mentioned above and press ENTER.
+.TP
+\fIRender scene(s) for all sky patches\fP
+If RadivitY finds existing renderings, it will ask whether you want to use them, or whether you want to re-render the scene(s). Select 'y' or 'n' based on criteria mentioned above and press ENTER.
+.TP
+\fIPalette\fP
+The colour palette for the output images can be changed. The default\-\fImono_r\fP\-goes from red to white. If answered with 'y', several available palettes are displayed and you can choose one by typing the token (word) at the far right (e.g. hot) and pressing ENTER.
+.TP
+\fIThresholds\fP
+Typically UDI is run with 3 different ranges of illumination\-under-illuminated, adquatly illuminated and over-illuminated (in which case you would need 2 thresholds). However, occasionally a third range might be of interest, so that there are 3 default thresholds. If you only want 3 ranges, simply repeat one of the thresholds, e.g. \fI300 300 15000\fR. If you press ENTER without entering any thresholds, RadivitY will use the default thresholds (\fI100, 2000\fR and \fI10000\fR). 
+.TP
+\fIResolution of sky-patch renderings\fP
+You can select whether you want the renderings of the scene (one for each sky patch) to be produced with high or low resoultion. Note that using low resolution does not mean that your final UDI image will be of lower resolution, as the results are expanded and interpolated over a full 512x512 image. It just means that the rendering process will be considerably shorter.
+
+Using the grid option will speed up the process even more, but the final UDI images might become a bit chunky (they are not interpolated).
+
+.TP
+\fIRADIANCE Parameters Sun\fP
+The default RADIANCE parameters for the sun renderings will be listed. You can adjust them by typing 'y' and pressing ENTER. When doing so, you will be asked to enter the parameter(s) you want to adjust. Follow the format indicated in the example and press ENTER.
+
+.TP
+\fIRADIANCE Parameters Sky\fP
+The default RADIANCE parameters for the sky renderings will be listed. You can adjust them by typing 'y' and pressing ENTER. When doing so, you will be asked to enter the parameter(s) you want to adjust. Follow the format indicated in the example and press ENTER.
+
+.TP
+\fISchedule\fP
+If you want to exclude periods of time (e.g. non-office hours, weekends and bank holidays), you can create a schedule file and put it in the \fIschedule\fR folder. If RadivitY finds a schedule, it will ask you whether you want to use it or not. If not, or if it does not find one, it will ask you whether you want to create a schedule. Follow instructions on screen. You can find a schedule with UK working hours (9-18) disconsidering weekends and bank holidays \fIR:\\100- Modelling General\\RadivitY\\schedule\fR. Copy and paste into your `schedule' folder.  It will ask you to re-type your schedule file (this is just a security check, for you to make sure your schedule file is the same that was used for the calculation
+of the coefficient file).
+
+.SS Output
+The output of the UDI analysis consists of eight images: 2 for each of the ranges (under-illuminated, partially or suplementary illuminated, adequately illuminated and over-illuminated). One of each of these images shows all the percentages of time each part of the room is within that range, going from 0% to 100% in steps of 10, and the other shows only which parts of the room are over 50% of the time in that range and which part are under 50% of the time in that range (pass\-not pass).
+
+
+
+\"**********************************************************************************************************************************
+.SH TROUBLESHOOTING
+Each instance of RadivitY looks for a folder within the \fImodules\fR folder corresponding to the module that is being run (e.g. da for Daylight Factor, irrad for Iraddiation Mapping etc). If the module is run for the first time, RadivitY will create the folder.
+
+In these folders all the files necessary for this module are kept (some of them keep information from previous runs and make the re-run faster). One particular folder within these folders is \fItmp\fR, where temporary files are stored. This folder is swept clean each time a new instance of RadivitY is run. Log files for all the sub-processes (scripts) of RadivitY are stored in the \fItmp\fR folder.
+
+If RadivitY did not produce the expected results, the tmp folder within the corresponding module folder is always the firt place to look for errors. Each script that is called in RadivitY will produce a log file and you will find some hint on what might be the problem.
+
+.SS Typical Problems:
+.TP
+\-Some input file is missing\fP
+If some of the input files are missing or wrongly named (e.g. the filter needs to stick to the naming convetion explained above), RadivitY will not be able to produce the desired images. The error message in one of the log files in the tmp folder would say something like:
+
+\fIcannot open scene_filter.rad: no such file or directory\fP
+
+Make sure that all files are placed in their corresponding folder and are named as required by RadivitY.
+
+.TP
+\-Corrupted Scene file\fP
+Ecotect tends to randomly put 0\-radius cylinders in the rad-file. This causes \fIoconv\fR (the program that generates the octree) to crash. You would find an error message like the following find in one of the process log files:
+
+\fIoconv: fatal \- illegal radii for cylinder "someName"\fP.
+
+You can clean the rad-file from ill-defined cylinders using the \fIclean_cylinders.py\fR script (usage\-type the following in the Cygwin command line: \fIecho Radile_to_be_cleaned.rad Radfile_clean.rad | clean_cylinders.py\fP). \fIRadfile_clean.rad\fP will be the clean rad-file.
+
+.TP
+\-Ill-defined view files\fP
+At the present stage RadivitY only allows squared renderings, which means that the horizontal and vertical extent of the view\-defined in the view file through parameters -vh -vv\-have to be the same. The error message in one of the log files in the tmp folder would be of the following form:
+
+\fIneeds to be added...\fR
+
+Rectangular (non-squared) renderings are to be added to RadivitY in the near future.
+
+.TP
+\-Memory problems\fP
+This has happened to me from time to time (e.g. in UDI). You will find an error message of the kind:
+
+\fI51533577 [main] bash 400 fork: child -1 - forked process 5500 died unexpectedly, retry -0, exit code -111234145, errno 11
+ path/to/script.sh: fork: retry: Resource temporarily unavailable\fR.
+
+This is an Cygwin/Windows problem and the only real solution is re-starting your computer and running RadivitY from scratch.
+
+
+
+

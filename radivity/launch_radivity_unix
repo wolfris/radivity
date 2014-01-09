@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    rm -f $HOME/bin/radivity/tmp/*
+    xterm -geometry 80x25+200+150 -e radivity &
+    echo $! >> $HOME"/bin/radivity/tmp/rad_pid"$!
+else
+    case "$1" in
+	-i) if [ ! -z $2 ]; then xterm -geometry 80x25+200+150 -e radivity -i $2 & else  xterm -geometry 80x25+200+150 -e radivity -i no_input_file & fi ;;
+	-e) xterm -geometry 80x25+200+150 -e radivity -e & ;;
+	-h) man radivity;;
+	-u) radivity_update;;
+	*) echo "option "$1" not recognized; please type 'radivity -h' for help";;
+    esac
+fi

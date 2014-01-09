@@ -1,0 +1,13 @@
+export DISPLAY=:0.0
+export TERM=xterm-256color
+
+
+export RAYPATH=.:/usr/local/lib/ray:/cygdrive/c/DIVA/Radiance/lib:/cygdrive/c/DIVA/Radiance/bin:/usr/local/lib
+export PATH=$PATH:$HOME/bin/radivity:$HOME/bin/radivity/scripts:$HOME/bin/radivity/bin:$HOME/bin/radivity/.setup
+export PYTHONPATH=$PYTHONPATH:.:$HOME/bin/radivity/scripts/py_modules
+export MANPATH=$MANPATH:$HOME/man
+export RAYLIB=/usr/local/lib
+
+alias radivity='launch_radivity'
+alias xterm='mintty -s 81,25 -t radivity'
+

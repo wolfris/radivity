@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    rm -f $HOME/bin/radivity/tmp/*
+    mintty -s 81,25 -t radivity -e radivity & 
+    echo $! >> $HOME"/bin/radivity/tmp/rad_pid"$!
+else
+    case "$1" in
+	-i) if [ ! -z $2 ]; then mintty -s 81,25 -t radivity -e radivity -i $2 & else  mintty -s 81,25 -t radivity -e radivity -i no_input_file & fi ;;
+	-e) mintty -s 81,25 -t radivity -e radivity -e & ;;
+	-h) man radivity;;
+	-u) radivity_update;;
+	*) echo "option "$1" not recognized; please type 'radivity -h' for help";;
+    esac
+fi

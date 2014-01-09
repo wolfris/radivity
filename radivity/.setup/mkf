@@ -1,0 +1,10 @@
+#!/bin/bash
+
+mkdir -p filter/parallel
+mkdir grids
+mkdir scenes
+mkdir schedule
+mkdir tmp
+mkdir -p views/parallel
+mkdir views/perspective
+mkdir visible_geometry

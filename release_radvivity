@@ -1,0 +1,8 @@
+
+#!/bin/bash
+
+cat radivity_installer | sed 's/RadivitY_dev/RadivitY/g' | sed 's/echo\ \-e\ \"\\033\[00;31mRadivitY\ development\ version\\033\[00m\"/ /g' > ../RadivitY/radivity_installer
+echo "Copying scripts and libraries..." 
+cp -r radivity ../RadivitY
+echo "Copying documentation"
+cp -r doc ../RadivitY

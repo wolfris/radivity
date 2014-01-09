@@ -1,0 +1,2 @@
+!xform -rz -97 discretesky.rad
+!xform -rz -97 SunFile.rad
